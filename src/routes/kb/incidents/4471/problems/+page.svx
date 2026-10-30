@@ -1,6 +1,6 @@
 ---
 layout: runbook
-title: '#4471 holds three problems, not one'
+title: '#4471 held three problems; one is still open'
 owner: miqavamariam
 status: open
 reviewed: 2026-10-30
@@ -13,38 +13,40 @@ signature: miqavamariam
   import RenderStamp from '#lib/kb/RenderStamp.svelte';
 
   const repo = 'https://github.com/miqavamariam/support-kb-4471/issues';
-  const issues = {
-    parser: { label: 'support-kb-4471#1', href: `${repo}/1` },
-    hint: { label: 'support-kb-4471#2', href: `${repo}/2` },
-    move: { label: 'support-kb-4471#3', href: `${repo}/3` },
+  const tickets = {
+    parser: { label: 'support-kb-4471#1', href: `${repo}/1`, state: 'fixed' },
+    hint: { label: 'support-kb-4471#2', href: `${repo}/2`, state: "won't fix" },
+    move: { label: 'support-kb-4471#3', href: `${repo}/3`, state: 'open' },
   };
 </script>
 
-[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Read report by report, it
-holds three problems. The queued parser fix closes only one of them.
+[#4471](/kb/incidents/4471) was marked known: one issue, one fix queued. Read report by report, it
+held three problems. Engineering closed #4471 on 5 October with two changes: the parser fix
+(`fix(dates): parse dd/mm for eu locales`) and retiring the booking-v3 form. Neither touches the
+third problem.
 
 <Callout kind="warn">
-Fixing the parser leaves two problems open. Each now has its own ticket.
+#4471 is closed, but bookings still move by one day. That problem is open in its own ticket.
 </Callout>
 
-## What #4471 holds
+## What #4471 held
 
-<ProblemTable ticket={4471} {issues} />
+<ProblemTable ticket={4471} {tickets} />
 
 ## The three problems
 
-**`parser`: the shared parser reads dates month first.** Every tenant in #4471 writes the day
-first, so "7 April" comes out as "4 July". This is the bug #4471 names, and the queued fix.
+**`parser`: the shared parser read dates month first.** Every tenant in #4471 writes the day
+first, so "7 April" came out as "4 July". This is the bug #4471 named. **Fixed** on 5 October.
 
-**`hint`: the booking-v3 form tells people to type the month first.** Its date field prints
-`MM/DD/YYYY`, but the form reads what people type the tenant's way, day first. People do what the
-hint says and the date flips. Same symptom as `parser`, different code: the parser fix does not
-touch it. It shows up only in form reports from booking-v3 tenants.
+**`hint`: the booking-v3 form told people to type the month first.** Its date field printed
+`MM/DD/YYYY`, but the form read what people typed the tenant's way, day first. People did what the
+hint said and the date flipped. Same symptom as `parser`, different code: the parser fix did not
+touch it. **Won't fix**: the booking-v3 form is retired, so the hint is gone with it.
 
 **`move`: the booking lands one day off.** Day and month are not swapped. The same meeting shows
 on different days in Lisbon and Toronto, and one tenant sees it only in June. That points at time
-zones, not at date order. The desk already read these as a one-day move, but the kb filed them
-under `parser` by tenant, so they had no ticket.
+zones, not at date order, so neither change on 5 October covers it. The desk read these as a
+one-day move and counts them under `parser` by tenant, so they had no ticket. **Open.**
 
 ## How we told them apart
 
@@ -53,12 +55,14 @@ under `parser` by tenant, so they had no ticket.
   browsers as `hint`, which catches about half of the real `hint` reports and mislabels a set of
   `parser` reports.
 - By what the dates in the report do: a swap (day ↔ month) or a one-day move.
-- Duplicate rows in the export are counted once, by report id.
+- Counted the way the desk's own view counts them, from the export of 4 October. Duplicate rows
+  count once, by report id.
 
 ## Lessons
 
 - Matching on subject ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) merges by symptom.
-  Different bugs with the same symptom end up in one ticket, and one fix gets queued for all of them.
-- Before a big ticket is marked known, check its reports against the cause, not the subject.
+  Different bugs with the same symptom end up in one ticket, and closing it closes all of them.
+- Before a big ticket is marked known or closed, check its reports against the cause, not the
+  subject.
 
 <RenderStamp {signature} />

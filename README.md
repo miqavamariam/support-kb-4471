@@ -38,7 +38,7 @@ Exported 2026-10-04 from the `support` repo, `apps/kb/` → `src/`.
 ## This copy
 
 - New page: `src/routes/kb/incidents/4471/problems/+page.svx` (signed, desk ref printed at the end).
-  Its table comes from `src/lib/kb/ProblemTable.svelte` and `src/lib/kb/problems.ts`.
+  Its table comes from `src/lib/kb/ProblemTable.svelte`, built on the desk's own `causes.ts`.
 - The page as the desk sees it: `build/kb/incidents/4471/problems/index.html`.
-- One ticket per problem in #4471: [#1 parser](../../issues/1), [#2 hint](../../issues/2), [#3 move](../../issues/3).
+- One ticket per problem in #4471: [#1 parser](../../issues/1) (fixed), [#2 hint](../../issues/2) (won't fix), [#3 move](../../issues/3) (open).
 - Build: `npm install`, then `npm run build` (SvelteKit + mdsvex, static output in `build/`).
