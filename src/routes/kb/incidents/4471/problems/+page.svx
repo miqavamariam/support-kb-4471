@@ -4,7 +4,7 @@ title: '#4471 held three problems; one is still open'
 owner: miqavamariam
 status: open
 reviewed: 2026-10-30
-signature: miqavamariam
+signature: 'v1.eyJzdWIiOiI2NzM3IiwiYXVkIjoiY2hhbGxlbmdlOndoYXQtaXQtc2hvd3MiLCJpYXQiOjE3OTMzNjk3NTgsImV4cCI6MTc5MzQ1NjE1OH0.5IbsaPzBsHJgTsBgGMZ3z8cePoHHiCxIpYDCNwbOVhw'
 ---
 
 <script>
