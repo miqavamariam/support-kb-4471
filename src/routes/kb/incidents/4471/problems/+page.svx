@@ -1,0 +1,64 @@
+---
+layout: runbook
+title: '#4471 holds three problems, not one'
+owner: miqavamariam
+status: open
+reviewed: 2026-10-30
+signature: miqavamariam
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+
+  const repo = 'https://github.com/miqavamariam/support-kb-4471/issues';
+  const issues = {
+    parser: { label: 'support-kb-4471#1', href: `${repo}/1` },
+    hint: { label: 'support-kb-4471#2', href: `${repo}/2` },
+    move: { label: 'support-kb-4471#3', href: `${repo}/3` },
+  };
+</script>
+
+[#4471](/kb/incidents/4471) is marked known: one issue, one fix queued. Read report by report, it
+holds three problems. The queued parser fix closes only one of them.
+
+<Callout kind="warn">
+Fixing the parser leaves two problems open. Each now has its own ticket.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} {issues} />
+
+## The three problems
+
+**`parser`: the shared parser reads dates month first.** Every tenant in #4471 writes the day
+first, so "7 April" comes out as "4 July". This is the bug #4471 names, and the queued fix.
+
+**`hint`: the booking-v3 form tells people to type the month first.** Its date field prints
+`MM/DD/YYYY`, but the form reads what people type the tenant's way, day first. People do what the
+hint says and the date flips. Same symptom as `parser`, different code: the parser fix does not
+touch it. It shows up only in form reports from booking-v3 tenants.
+
+**`move`: the booking lands one day off.** Day and month are not swapped. The same meeting shows
+on different days in Lisbon and Toronto, and one tenant sees it only in June. That points at time
+zones, not at date order. The desk already read these as a one-day move, but the kb filed them
+under `parser` by tenant, so they had no ticket.
+
+## How we told them apart
+
+- By the tenant (its locale and booking form, `locales.ts`) and the channel, not by intake's tag.
+  Intake tags by the reporter's browser, and it disagrees with the tenant often: it tags en-US
+  browsers as `hint`, which catches about half of the real `hint` reports and mislabels a set of
+  `parser` reports.
+- By what the dates in the report do: a swap (day ↔ month) or a one-day move.
+- Duplicate rows in the export are counted once, by report id.
+
+## Lessons
+
+- Matching on subject ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) merges by symptom.
+  Different bugs with the same symptom end up in one ticket, and one fix gets queued for all of them.
+- Before a big ticket is marked known, check its reports against the cause, not the subject.
+
+<RenderStamp {signature} />
